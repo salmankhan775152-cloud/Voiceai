@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceFlow Pro | Free & Unlimited Text-to-Speech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --accent: #ff7eb3;
+            --accent-hover: #ff758c;
+            --control-bg: rgba(0, 0, 0, 0.2);
+            --danger: #ff4757;
+            --success: #2ed573;
+        }[data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --control-bg: rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* HEADER */
+        .header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #ff7eb3, #ff758c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* MAIN TEXT AREA */
+        .text-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button {
+            background: var(--control-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border: none;
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .textarea-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        textarea {
+            width: 100%;
+            height: 400px;
+            background: var(--control-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            color: var(--text-main);
+            font-size: 16px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .reading-view {
+            display: none;
+            width: 100%;
+            height: 400px;
+            background: var(--control-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            color: var(--text-main);
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .reading-view mark {
+            background: var(--accent);
+            color: white;
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 0 10px;
+        }
+
+        /* SIDEBAR SETTINGS */
+        .settings-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: var(--control-bg);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .setting-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            background: var(--control-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            border-radius: 8px;
+            outline: none;
+        }
+
+        select option {
+            background: #2d3436;
+            color: white;
+        }[data-theme="light"] select option {
+            background: white;
+            color: black;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: var(--glass-border);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* CONTROLS */
+        .playback-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .play-btn {
+            grid-column: 1 / -1;
+            padding: 15px;
+            font-size: 1.2rem;
+            justify-content: center;
+        }
+
+        /* UTILS */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hidden { display: none !important; }
+
+        .presets-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .preset-item {
+            display: flex;
+            justify-content: space-between;
+            background: var(--control-bg);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .compat-warning {
+            grid-column: 1 / -1;
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            padding: 10px;
+            border-radius: 8px;
+            color: #ffc107;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="compat-warning" id="compat-warning">
+            ⚠️ For the best experience and longest continuous playback, please use Google Chrome or Microsoft Edge.
+        </div>
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="brand">
+                <div class="logo">🌊</div>
+                <div>
+                    <h2>VoiceFlow Pro</h2>
+                    <div class="tagline">Transform any text into natural human voice - Free & Unlimited</div>
+                </div>
+            </div>
+            <button class="theme-toggle" id="theme-btn" title="Toggle Theme">🌙</button>
+        </header>
+
+        <!-- MAIN TEXT AREA -->
+        <main class="text-section">
+            <div class="toolbar">
+                <button id="clear-btn">🗑️ Clear</button>
+                <button id="paste-btn">📋 Paste</button>
+                <button id="add-pause-btn" title="Add a 1-second pause">⏱️ Add Pause</button>
+                <button id="add-emph-btn" title="Wrap selected text for emphasis">🔊 Add Emphasis</button>
+                <button id="font-up-btn">A+</button>
+                <button id="font-down-btn">A-</button>
+            </div>
+
+            <div class="textarea-wrapper">
+                <textarea id="text-input" placeholder="Type or paste your text here... Unlimited characters supported. Auto-chunking ensures continuous playback even for books!"></textarea>
+                <div id="reading-view" class="reading-view"></div>
+            </div>
+
+            <div class="stats">
+                <span id="char-word-count">0 Chars | 0 Words</span>
+                <span id="read-time">~0 min read</span>
+            </div>
+        </main>
+
+        <!-- SETTINGS & CONTROLS -->
+        <aside class="settings-section">
+            
+            <div class="setting-group">
+                <label class="setting-header">Language Filter</label>
+                <select id="lang-filter">
+                    <option value="all">All Languages</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <div class="setting-header">
+                    <label>Voice</label>
+                    <span id="voice-count" style="font-size:0.8rem; color:var(--text-muted);">0 loaded</span>
+                </div>
+                <select id="voice-select">
+                    <option value="">Loading voices...</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <div class="setting-header">
+                    <label>Speed</label>
+                    <span id="rate-val">1.0x</span>
+                </div>
+                <input type="range" id="rate-slider" min="0.5" max="2" step="0.1" value="1">
+            </div>
+
+            <div class="setting-group">
+                <div class="setting-header">
+                    <label>Pitch</label>
+                    <span id="pitch-val">1.0</span>
+                </div>
+                <input type="range" id="pitch-slider" min="0" max="2" step="0.1" value="1">
+            </div>
+
+            <div class="setting-group">
+                <div class="setting-header">
+                    <label>Volume</label>
+                    <span id="volume-val">100%</span>
+                </div>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+            </div>
+
+            <div class="playback-controls">
+                <button id="play-btn" class="btn-primary play-btn">▶️ SPEAK</button>
+                <button id="pause-btn">⏸️ Pause</button>
+                <button id="stop-btn">⏹️ Stop</button>
+                <button id="record-btn" class="play-btn" style="background: var(--danger); color: white; margin-top:5px;" title="Record audio to MP3/WebM">🔴 Download Audio</button>
+            </div>
+
+            <div class="setting-group" style="margin-top: 10px; border-top: 1px solid var(--glass-border); padding-top: 10px;">
+                <div class="setting-header">
+                    <label>Saved Presets</label>
+                    <button id="save-preset-btn" style="padding: 2px 8px; font-size: 0.75rem;">+ Save</button>
+                </div>
+                <div class="presets-list" id="presets-list">
+                    <!-- Presets injected here -->
+                </div>
+            </div>
+            
+        </aside>
+
+    </div>
+
+    <div id="toast" class="toast">Action successful</div>
+
+    <script>
+        /**
+         * VoiceFlow Pro - JavaScript Logic
+         * Handles TTS, Chunking, Recording, Settings, and UI interactions.
+         */
+
+        // --- DOM Elements ---
+        const dom = {
+            textInput: document.getElementById('text-input'),
+            readingView: document.getElementById('reading-view'),
+            voiceSelect: document.getElementById('voice-select'),
+            langFilter: document.getElementById('lang-filter'),
+            rateSlider: document.getElementById('rate-slider'),
+            pitchSlider: document.getElementById('pitch-slider'),
+            volumeSlider: document.getElementById('volume-slider'),
+            rateVal: document.getElementById('rate-val'),
+            pitchVal: document.getElementById('pitch-val'),
+            volumeVal: document.getElementById('volume-val'),
+            playBtn: document.getElementById('play-btn'),
+            pauseBtn: document.getElementById('pause-btn'),
+            stopBtn: document.getElementById('stop-btn'),
+            recordBtn: document.getElementById('record-btn'),
+            clearBtn: document.getElementById('clear-btn'),
+            pasteBtn: document.getElementById('paste-btn'),
+            addPauseBtn: document.getElementById('add-pause-btn'),
+            addEmphBtn: document.getElementById('add-emph-btn'),
+            fontUpBtn: document.getElementById('font-up-btn'),
+            fontDownBtn: document.getElementById('font-down-btn'),
+            charWordCount: document.getElementById('char-word-count'),
+            readTime: document.getElementById('read-time'),
+            themeBtn: document.getElementById('theme-btn'),
+            toast: document.getElementById('toast'),
+            voiceCount: document.getElementById('voice-count'),
+            presetsList: document.getElementById('presets-list'),
+            savePresetBtn: document.getElementById('save-preset-btn'),
+            compatWarning: document.getElementById('compat-warning')
+        };
+
+        // --- State Variables ---
+        let voices =[];
+        let isPlaying = false;
+        let isPaused = false;
+        let isRecording = false;
+        let currentUtterance = null;
+        let textChunks =[];
+        let currentChunkIndex = 0;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let presets = JSON.parse(localStorage.getItem('vf_presets')) ||[];
+        let currentFontSize = 16;
+
+        const synth = window.speechSynthesis;
+
+        // Emoji Flags Mapping
+        const getFlag = (lang) => {
+            if(!lang) return '🌐';
+            const country = lang.split('-')[1];
+            if (!country) return '🌐';
+            return country.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397));
+        };
+
+        // --- Initialization ---
+        function init() {
+            checkBrowser();
+            loadVoices();
+            if (synth.onvoiceschanged !== undefined) {
+                synth.onvoiceschanged = loadVoices;
+            }
+            loadTheme();
+            updateStats();
+            renderPresets();
+
+            // Event Listeners
+            dom.textInput.addEventListener('input', updateStats);
+            dom.rateSlider.addEventListener('input', (e) => dom.rateVal.innerText = `${parseFloat(e.target.value).toFixed(1)}x`);
+            dom.pitchSlider.addEventListener('input', (e) => dom.pitchVal.innerText = parseFloat(e.target.value).toFixed(1));
+            dom.volumeSlider.addEventListener('input', (e) => dom.volumeVal.innerText = `${Math.round(e.target.value * 100)}%`);
+            
+            dom.playBtn.addEventListener('click', handlePlay);
+            dom.pauseBtn.addEventListener('click', handlePause);
+            dom.stopBtn.addEventListener('click', handleStop);
+            dom.recordBtn.addEventListener('click', handleRecord);
+            
+            dom.clearBtn.addEventListener('click', () => { dom.textInput.value = ''; updateStats(); });
+            dom.pasteBtn.addEventListener('click', async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    dom.textInput.value += text;
+                    updateStats();
+                    showToast('Pasted from clipboard');
+                } catch (err) {
+                    showToast('Failed to read clipboard');
+                }
+            });
+
+            dom.addPauseBtn.addEventListener('click', () => insertAtCursor('[pause:1s]'));
+            dom.addEmphBtn.addEventListener('click', () => insertAtCursor('[emph] ', ' [/emph]'));
+            
+            dom.fontUpBtn.addEventListener('click', () => changeFontSize(2));
+            dom.fontDownBtn.addEventListener('click', () => changeFontSize(-2));
+            
+            dom.themeBtn.addEventListener('click', toggleTheme);
+            dom.langFilter.addEventListener('change', populateVoiceList);
+            dom.savePresetBtn.addEventListener('click', savePreset);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if(e.target === dom.textInput) return; // Ignore if typing
+                if(e.code === 'Space') { e.preventDefault(); isPlaying ? handlePause() : handlePlay(); }
+                if(e.code === 'Escape') { handleStop(); }
+            });
+            dom.textInput.addEventListener('keydown', (e) => {
+                if(e.ctrlKey && e.code === 'Enter') { handlePlay(); }
+            });
+        }
+
+        // --- Core Functions ---
+        
+        function checkBrowser() {
+            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            const isEdge = /Edg/.test(navigator.userAgent);
+            if (!isChrome && !isEdge) {
+                dom.compatWarning.style.display = 'block';
+            }
+        }
+
+        function loadVoices() {
+            voices = synth.getVoices();
+            if(voices.length === 0) return;
+            
+            // Extract unique languages
+            const langs = [...new Set(voices.map(v => v.lang.split('-')[0]))].sort();
+            
+            // Populate lang filter (keep existing selection if any)
+            const currLang = dom.langFilter.value;
+            dom.langFilter.innerHTML = '<option value="all">All Languages</option>';
+            langs.forEach(l => {
+                if(l) {
+                    const opt = document.createElement('option');
+                    opt.value = l;
+                    opt.innerText = new Intl.DisplayNames(['en'], {type: 'language'}).of(l) || l;
+                    dom.langFilter.appendChild(opt);
+                }
+            });
+            dom.langFilter.value = currLang || 'all';
+
+            populateVoiceList();
+        }
+
+        function populateVoiceList() {
+            const filter = dom.langFilter.value;
+            dom.voiceSelect.innerHTML = '';
+            
+            const filteredVoices = filter === 'all' 
+                ? voices 
+                : voices.filter(v => v.lang.startsWith(filter));
+
+            filteredVoices.forEach((voice, i) => {
+                const option = document.createElement('option');
+                option.value = voice.name;
+                const flag = getFlag(voice.lang);
+                option.textContent = `${flag} ${voice.name} (${voice.lang})${voice.default ? ' — Default' : ''}`;
+                
+                // Try to select Google US English as default fallback
+                if(voice.default || voice.name.includes('Google US English')) {
+                    option.selected = true;
+                }
+                dom.voiceSelect.appendChild(option);
+            });
+            dom.voiceCount.innerText = `${filteredVoices.length} voices`;
+        }
+
+        function updateStats() {
+            const text = dom.textInput.value;
+            const chars = text.length;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const minutes = Math.ceil(words / 200); // Avg 200 WPM
+
+            dom.charWordCount.innerText = `${chars} Chars | ${words} Words`;
+            dom.readTime.innerText = `~${minutes} min read`;
+        }
+
+        function insertAtCursor(startTag, endTag = '') {
+            const start = dom.textInput.selectionStart;
+            const end = dom.textInput.selectionEnd;
+            const text = dom.textInput.value;
+            const selectedText = text.substring(start, end);
+            
+            dom.textInput.value = text.substring(0, start) + startTag + selectedText + endTag + text.substring(end);
+            dom.textInput.focus();
+            dom.textInput.selectionEnd = start + startTag.length + selectedText.length;
+            updateStats();
+        }
+
+        function changeFontSize(delta) {
+            currentFontSize = Math.max(12, Math.min(32, currentFontSize + delta));
+            dom.textInput.style.fontSize = `${currentFontSize}px`;
+            dom.readingView.style.fontSize = `${currentFontSize}px`;
+        }
+
+        // --- TTS Engine & Chunking ---
+
+        function chunkText(text) {
+            // Advanced chunker: handles pseudo-SSML and sentence boundaries to avoid API timeouts
+            let result =[];
+            
+            // 1. Split by pause tags
+            const pauseRegex = /\[pause:(\d+)s\]/gi;
+            let lastIndex = 0;
+            let match;
+
+            while ((match = pauseRegex.exec(text)) !== null) {
+                const preText = text.substring(lastIndex, match.index);
+                if (preText.trim()) splitIntoSentences(preText, result);
+                result.push({ type: 'pause', delay: parseInt(match[1]) * 1000 });
+                lastIndex = pauseRegex.lastIndex;
+            }
+            const remainder = text.substring(lastIndex);
+            if (remainder.trim()) splitIntoSentences(remainder, result);
+
+            return result;
+        }
+
+        function splitIntoSentences(text, arrayOut) {
+            // Split by sentence terminators but keep the terminator
+            const sentences = text.match(/[^.!?]+[.!?]+|\s*[^.!?]+$/g) ||[text];
+            sentences.forEach(s => {
+                if (s.trim()) {
+                    // Check for emphasis tags
+                    const emphMatch = /\[emph\](.*?)\[\/emph\]/gi.exec(s);
+                    if (emphMatch) {
+                        // Very basic implementation: just mark the chunk for emphasis
+                        arrayOut.push({ type: 'speech', text: s.replace(/\[\/?emph\]/g, ''), emphasis: true });
+                    } else {
+                        // If sentence is incredibly long (e.g., no punctuation), chunk by words/chars
+                        if (s.length > 200) {
+                            const subChunks = s.match(/.{1,200}(\s|$)/g) || [s];
+                            subChunks.forEach(sc => arrayOut.push({ type: 'speech', text: sc, emphasis: false }));
+                        } else {
+                            arrayOut.push({ type: 'speech', text: s, emphasis: false });
+                        }
+                    }
+                }
+            });
+        }
+
+        function setupReadingView() {
+            dom.textInput.style.display = 'none';
+            dom.readingView.style.display = 'block';
+            
+            // Build the reading view DOM
+            dom.readingView.innerHTML = '';
+            textChunks.forEach((chunk, index) => {
+                if (chunk.type === 'speech') {
+                    const span = document.createElement('span');
+                    span.id = `chunk-${index}`;
+                    span.innerText = chunk.text + " ";
+                    dom.readingView.appendChild(span);
+                } else if (chunk.type === 'pause') {
+                    const p = document.createElement('span');
+                    p.style.color = 'var(--text-muted)';
+                    p.innerText = ` [⏸️ ${chunk.delay/1000}s pause] `;
+                    dom.readingView.appendChild(p);
+                }
+            });
+        }
+
+        function teardownReadingView() {
+            dom.textInput.style.display = 'block';
+            dom.readingView.style.display = 'none';
+        }
+
+        function highlightChunk(index) {
+            document.querySelectorAll('.reading-view span').forEach(el => {
+                el.style.background = 'transparent';
+                el.style.color = 'var(--text-main)';
+            });
+            const el = document.getElementById(`chunk-${index}`);
+            if (el) {
+                el.style.background = 'var(--accent)';
+                el.style.color = 'white';
+                el.style.borderRadius = '4px';
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        async function handlePlay() {
+            if (isPaused) {
+                synth.resume();
+                isPaused = false;
+                dom.playBtn.innerHTML = '▶️ SPEAKING...';
+                return;
+            }
+
+            const text = dom.textInput.value.trim();
+            if (!text) {
+                showToast("Please enter some text first.");
+                return;
+            }
+
+            synth.cancel(); // Clear queue
+            textChunks = chunkText(text);
+            currentChunkIndex = 0;
+            isPlaying = true;
+            isPaused = false;
+            
+            setupReadingView();
+            dom.playBtn.innerHTML = '▶️ SPEAKING...';
+            
+            speakNextChunk();
+        }
+
+        function speakNextChunk() {
+            if (!isPlaying || currentChunkIndex >= textChunks.length) {
+                if(isPlaying) handleStop(); // Finished naturally
+                return;
+            }
+
+            const chunk = textChunks[currentChunkIndex];
+
+            if (chunk.type === 'pause') {
+                highlightChunk(currentChunkIndex);
+                setTimeout(() => {
+                    currentChunkIndex++;
+                    speakNextChunk();
+                }, chunk.delay);
+                return;
+            }
+
+            // Type is Speech
+            highlightChunk(currentChunkIndex);
+            
+            currentUtterance = new SpeechSynthesisUtterance(chunk.text);
+            
+            // Set voice settings
+            const selectedVoice = voices.find(v => v.name === dom.voiceSelect.value);
+            if (selectedVoice) currentUtterance.voice = selectedVoice;
+            
+            let rate = parseFloat(dom.rateSlider.value);
+            let pitch = parseFloat(dom.pitchSlider.value);
+            let volume = parseFloat(dom.volumeSlider.value);
+
+            if (chunk.emphasis) {
+                pitch = Math.min(2, pitch * 1.2);
+                volume = Math.min(1, volume * 1.5);
+                rate = Math.max(0.5, rate * 0.9); // Slow down slightly for emphasis
+            }
+
+            currentUtterance.rate = rate;
+            currentUtterance.pitch = pitch;
+            currentUtterance.volume = volume;
+
+            currentUtterance.onend = () => {
+                currentChunkIndex++;
+                speakNextChunk();
+            };
+
+            currentUtterance.onerror = (e) => {
+                console.error("Speech error", e);
+                if (e.error !== 'interrupted' && e.error !== 'canceled') {
+                    currentChunkIndex++;
+                    speakNextChunk();
+                }
+            };
+
+            synth.speak(currentUtterance);
+        }
+
+        function handlePause() {
+            if (!isPlaying) return;
+            if (isPaused) {
+                synth.resume();
+                isPaused = false;
+                dom.playBtn.innerHTML = '▶️ SPEAKING...';
+                dom.pauseBtn.innerHTML = '⏸️ Pause';
+            } else {
+                synth.pause();
+                isPaused = true;
+                dom.playBtn.innerHTML = '▶️ RESUME';
+                dom.pauseBtn.innerHTML = '▶️ Resume';
+            }
+        }
+
+        function handleStop() {
+            synth.cancel();
+            isPlaying = false;
+            isPaused = false;
+            dom.playBtn.innerHTML = '▶️ SPEAK';
+            dom.pauseBtn.innerHTML = '⏸️ Pause';
+            teardownReadingView();
+            
+            if (isRecording && mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            }
+        }
+
+        // --- Audio Recording (Tab Capture Hack for Web Speech API) ---
+        
+        async function handleRecord() {
+            if (!dom.textInput.value.trim()) {
+                showToast("Please enter text before recording.");
+                return;
+            }
+
+            // Web Speech API natively outputs directly to OS audio, bypassing AudioContext.
+            // The only vanilla JS way to record it is via getDisplayMedia (System Audio Capture).
+            try {
+                showToast("Please select 'Tab' or 'System Audio' and check 'Share Audio' in the popup.", 4000);
+                
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: true, // Required by most browsers to get display media
+                    audio: true
+                });
+
+                const audioTracks = stream.getAudioTracks();
+                if (audioTracks.length === 0) {
+                    showToast("No audio track selected! Please try again and check 'Share Audio'.", 4000);
+                    stream.getTracks().forEach(t => t.stop());
+                    return;
+                }
+
+                // Create Audio-only stream
+                const audioStream = new MediaStream([audioTracks[0]]);
+                
+                mediaRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm' });
+                audioChunks =[];
+
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    
+                    // Generate clean filename
+                    let fileName = dom.textInput.value.substring(0, 20).replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                    a.download = `VoiceFlow_${fileName || 'audio'}.webm`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    
+                    isRecording = false;
+                    dom.recordBtn.innerHTML = '🔴 Download Audio';
+                    showToast("Audio downloaded successfully!");
+                    
+                    // Cleanup stream
+                    stream.getTracks().forEach(t => t.stop());
+                };
+
+                // Start recording & playback
+                isRecording = true;
+                dom.recordBtn.innerHTML = '⏹️ RECORDING... (Click Stop)';
+                mediaRecorder.start();
+                
+                handlePlay(); // Start speaking
+
+            } catch (err) {
+                console.error(err);
+                showToast("Recording cancelled or permission denied.");
+            }
+        }
+
+        // --- Presets Management ---
+
+        function savePreset() {
+            if (presets.length >= 5) {
+                showToast("Maximum 5 presets allowed. Delete one first.");
+                return;
+            }
+            
+            const name = prompt("Enter a name for this preset:");
+            if (!name) return;
+
+            const preset = {
+                id: Date.now().toString(),
+                name,
+                voice: dom.voiceSelect.value,
+                rate: dom.rateSlider.value,
+                pitch: dom.pitchSlider.value,
+                volume: dom.volumeSlider.value
+            };
+
+            presets.push(preset);
+            localStorage.setItem('vf_presets', JSON.stringify(presets));
+            renderPresets();
+            showToast("Preset saved!");
+        }
+
+        function loadPreset(id) {
+            const p = presets.find(p => p.id === id);
+            if (!p) return;
+
+            dom.voiceSelect.value = p.voice;
+            dom.rateSlider.value = p.rate;
+            dom.pitchSlider.value = p.pitch;
+            dom.volumeSlider.value = p.volume;
+
+            dom.rateVal.innerText = `${parseFloat(p.rate).toFixed(1)}x`;
+            dom.pitchVal.innerText = parseFloat(p.pitch).toFixed(1);
+            dom.volumeVal.innerText = `${Math.round(p.volume * 100)}%`;
+            
+            showToast(`Loaded preset: ${p.name}`);
+        }
+
+        function deletePreset(id) {
+            presets = presets.filter(p => p.id !== id);
+            localStorage.setItem('vf_presets', JSON.stringify(presets));
+            renderPresets();
+        }
+
+        function renderPresets() {
+            dom.presetsList.innerHTML = '';
+            if (presets.length === 0) {
+                dom.presetsList.innerHTML = '<div style="color:var(--text-muted); font-size:0.8rem;">No saved presets</div>';
+                return;
+            }
+
+            presets.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'preset-item';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.innerText = p.name;
+                nameSpan.style.cursor = 'pointer';
+                nameSpan.style.flexGrow = '1';
+                nameSpan.onclick = () => loadPreset(p.id);
+
+                const delBtn = document.createElement('span');
+                delBtn.innerText = '✖';
+                delBtn.style.cursor = 'pointer';
+                delBtn.style.color = 'var(--danger)';
+                delBtn.onclick = () => deletePreset(p.id);
+
+                div.appendChild(nameSpan);
+                div.appendChild(delBtn);
+                dom.presetsList.appendChild(div);
+            });
+        }
+
+        // --- Utilities ---
+        
+        function toggleTheme() {
+            const root = document.documentElement;
+            const isLight = root.getAttribute('data-theme') === 'light';
+            root.setAttribute('data-theme', isLight ? 'dark' : 'light');
+            dom.themeBtn.innerText = isLight ? '🌙' : '☀️';
+            localStorage.setItem('vf_theme', isLight ? 'dark' : 'light');
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('vf_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            dom.themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
+        }
+
+        let toastTimeout;
+        function showToast(message, duration = 3000) {
+            dom.toast.innerText = message;
+            dom.toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                dom.toast.classList.remove('show');
+            }, duration);
+        }
+
+        // Run
+        window.addEventListener('load', init);
+
+    </script>
+</body>
+</html>
